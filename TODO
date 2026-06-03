@@ -1,0 +1,5 @@
+Todo:
+- LLVM-level external definitions support
+- Global variables
+- Function calls from frIRValue
+- Declare alloca variables at the top of every function, before any block definition

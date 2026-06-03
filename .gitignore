@@ -1,0 +1,8 @@
+*.o
+*.a
+
+build/
+.cache/
+.xmake/
+.DS_Store
+.cache/
