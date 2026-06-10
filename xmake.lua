@@ -21,3 +21,11 @@ target("fir")
 	add_includedirs("include", {public=true})
 	add_headerfiles("include/(fir/*.h)", {public=true})
 target_end()
+
+target("fir-test")
+	set_kind("binary")
+
+	add_files("test/test.c")
+
+	add_deps("fir")
+target_end()
