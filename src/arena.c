@@ -1,5 +1,6 @@
 #include "fir/arena.h"
 #include "fir/config.h"
+#include <assert.h>
 #include <stdlib.h>
 
 frArena frArena_new(size_t size) {
@@ -17,7 +18,8 @@ void *frArena_alloc(frArena *arena, size_t size) {
   size = FR_ALIGN(size, sizeof(void *));
 
   size_t remaining = (size_t)(arena->data + arena->size - arena->p);
-  if (remaining <= size)
+  assert(remaining >= size);
+  if (remaining < size)
     return NULL;
 
   void *p = arena->p;
