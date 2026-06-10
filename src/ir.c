@@ -156,10 +156,7 @@ void frIR_set_insert_func(frIR *ir, frIRFunc *func) {
 
 frIRValue frIR_arg(frIR *ir, size_t index) {
   frIRFunc *func = ir->func;
-  if (index >= FR_FUNC_MAX_ARGS) {
-    return (frIRValue){.name = "_error_arg_exceeds_max_values",
-                       .type = &frIRType_u0};
-  }
+  assert(index < FR_FUNC_MAX_ARGS);
 
   return (frIRValue){.name = FR_FUNC_ARG_NAMES[index],
                      .type = func->args[index]};
