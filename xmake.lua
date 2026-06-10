@@ -31,7 +31,7 @@ target("fircpp")
 	add_files("fircpp/src/*.cpp")
 
 	add_includedirs("fircpp/include", {public=true})
-	add_headerfiles("fircpp/include/(fircpp/*.h)", {public=true})
+	add_headerfiles("fircpp/include/(fircpp/*.hpp)", {public=true})
 
 	add_deps("fir")
 target_end()
