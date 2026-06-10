@@ -66,9 +66,7 @@ void frIR_cond_br(frIR *ir, frIRValue *value, frIRBlock *true_block,
 frIRValue frIR_cast(frIR *ir, frIRValue *value, frIRType *type);
 frIRValue frIR_call(frIR *ir, frIRFunc *func,
                     frIRValue *values[FR_FUNC_MAX_ARGS]);
-void frIR_arrset(frIR *ir, frIRValue *array, frIRValue *index,
-                 frIRValue *value);
-frIRValue frIR_arrget(frIR *ir, frIRValue *array, frIRValue *index);
+frIRValue frIR_arrindex(frIR *ir, frIRValue *array, frIRValue *index);
 
 FR_HEADER_END
 

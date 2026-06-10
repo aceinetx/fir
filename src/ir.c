@@ -383,30 +383,24 @@ frIRValue frIR_call(frIR *ir, frIRFunc *func,
   return (frIRValue){.name = inst->v.call.name, .type = func->type};
 }
 
-void frIR_arrset(frIR *ir, frIRValue *array, frIRValue *index,
-                 frIRValue *value) {
+frIRValue frIR_arrindex(frIR *ir, frIRValue *array, frIRValue *index) {
   assert(array->type->unit == FR_TYPE_PTR || array->type->unit == FR_TYPE_ARR);
   frIRInst *inst = malloc(sizeof *inst);
-  *inst = (frIRInst){.type = FR_ARRSET,
-                     .v.arrset = {.array = array->name,
-                                  .index = index->name,
-                                  .value = value->name},
+  *inst = (frIRInst){.type = FR_ARRINDEX,
+                     .v.arrindex =
+                         {
+                             .array = array->name,
+                             .index = index->name,
+                         },
                      .next = NULL};
+  frIR_temp(ir, inst->v.arrindex.name);
+  if (array->type->unit == FR_TYPE_ARR) {
+    inst->v.arrindex.type = (frIRType){
+        .unit = FR_TYPE_PTR, .v.ptr.pointee = array->type->v.array.type};
+  } else if (array->type->unit == FR_TYPE_PTR) {
+    inst->v.arrindex.type = *array->type;
+  }
   frIR_insert(ir, inst);
-}
-
-frIRValue frIR_arrget(frIR *ir, frIRValue *array, frIRValue *index) {
-  assert(array->type->unit == FR_TYPE_PTR || array->type->unit == FR_TYPE_ARR);
-
-  frIRType *type = array->type->unit == FR_TYPE_PTR ? array->type->v.ptr.pointee
-                                                    : array->type->v.array.type;
-
-  frIRInst *inst = malloc(sizeof *inst);
-  *inst = (frIRInst){
-      .type = FR_ARRGET,
-      .v.arrget = {.array = array->name, .index = index->name, .type = type},
-      .next = NULL};
-  frIR_temp(ir, inst->v.arrget.name);
-  frIR_insert(ir, inst);
-  return (frIRValue){.name = inst->v.arrget.name, .type = type};
+  return (frIRValue){.name = inst->v.arrindex.name,
+                     .type = &inst->v.arrindex.type};
 }

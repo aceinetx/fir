@@ -115,13 +115,9 @@ void frIRInst_print(frIRInst *inst, FILE *out) {
     }
     fputs(");\n", out);
   } break;
-  case FR_ARRSET: {
-    fprintf(out, "%s[%s] =%s;\n", inst->v.arrset.array, inst->v.arrset.index,
-            inst->v.arrset.value);
-  } break;
-  case FR_ARRGET: {
-    fprintf(out, "%s =%s[%s];\n", inst->v.arrget.name, inst->v.arrget.array,
-            inst->v.arrget.index);
+  case FR_ARRINDEX: {
+    fprintf(out, "%s = &%s[%s];\n", inst->v.arrindex.name,
+            inst->v.arrindex.array, inst->v.arrindex.index);
   } break;
   default:
     fprintf(out, "/* unknown instruction %d */", inst->type);

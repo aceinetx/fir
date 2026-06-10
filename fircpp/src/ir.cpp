@@ -152,12 +152,8 @@ fir::Value fir::IR::call(Func &func,
   return frIR_call(&ir, func, args.data());
 }
 
-void fir::IR::arrset(frIRValue &array, frIRValue &index, frIRValue &value) {
-  frIR_arrset(&ir, &array, &index, &value);
-}
-
-fir::Value fir::IR::arrget(Value &array, Value &index) {
-  return frIR_arrget(&ir, &array, &index);
+fir::Value fir::IR::arrindex(Value &array, Value &index) {
+  return frIR_arrindex(&ir, &array, &index);
 }
 
 std::shared_ptr<frIRType> fir::IR::create_new_type() {

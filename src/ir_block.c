@@ -18,10 +18,13 @@ void frIRBlock_print_decls(frIRBlock *block, FILE *out) {
   while (inst) {
     if (inst->type == FR_ALLOCA) {
       const char *s = inst->v.alloca.name;
-      frIRType_print(
-          &(frIRType){.unit = FR_TYPE_ARR,
-                      .v.array = {.type = inst->v.alloca.type, .size = 1}},
-          out, s);
+      frIRType alloca_type =
+          (frIRType){.unit = FR_TYPE_ARR,
+                     .v.array = {.type = inst->v.alloca.type, .size = 1}};
+      if (inst->v.alloca.type->unit == FR_TYPE_ARR) {
+        alloca_type = *inst->v.alloca.type;
+      }
+      frIRType_print(&alloca_type, out, s);
       fputs(";\n", out);
     } else if (inst->type == FR_CONST_INT) {
       frIRType_print(inst->v.const_int.type, out, inst->v.const_int.name);
@@ -32,8 +35,8 @@ void frIRBlock_print_decls(frIRBlock *block, FILE *out) {
     } else if (inst->type == FR_CONST_STR) {
       frIRType_print(&frIRType_str, out, inst->v.const_str.name);
       fputs(";\n", out);
-    } else if (inst->type == FR_ARRGET) {
-      frIRType_print(inst->v.arrget.type, out, inst->v.arrget.name);
+    } else if (inst->type == FR_ARRINDEX) {
+      frIRType_print(&inst->v.arrindex.type, out, inst->v.arrindex.name);
       fputs(";\n", out);
     } else if (inst->type == FR_CAST) {
       frIRType_print(inst->v.cast.type, out, inst->v.cast.name);

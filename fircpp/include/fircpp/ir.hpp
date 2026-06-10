@@ -59,8 +59,7 @@ public:
   void cond_br(Value &value, Block true_block, Block false_block);
   Value cast(Value &value, type::Type type);
   Value call(Func &func, std::array<Value *, FR_FUNC_MAX_ARGS> args);
-  void arrset(frIRValue &array, frIRValue &index, frIRValue &value);
-  Value arrget(Value &array, Value &index);
+  Value arrindex(Value &array, Value &index);
 
   std::shared_ptr<frIRType> create_new_type();
   const char *unowned_str(const std::string &from);

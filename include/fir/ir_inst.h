@@ -22,8 +22,7 @@ enum {
   FR_COND_BR,
   FR_CAST,
   FR_CALL,
-  FR_ARRSET,
-  FR_ARRGET,
+  FR_ARRINDEX,
 };
 
 enum {
@@ -110,16 +109,11 @@ typedef struct frIRInst {
       const char *func;
     } call;
     struct {
-      const char *array;
-      const char *index;
-      const char *value;
-    } arrset;
-    struct {
-      frIRType *type;
       char name[FR_IDENT_SIZE];
+      frIRType type;
       const char *array;
       const char *index;
-    } arrget;
+    } arrindex;
   } v;
   struct frIRBlock *block;
   struct frIRInst *next;
