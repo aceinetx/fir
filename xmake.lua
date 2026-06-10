@@ -36,10 +36,18 @@ target("fircpp")
 	add_deps("fir")
 target_end()
 
-target("fircpp_test")
+target("fir-test")
 	set_kind("binary")
 
-	add_files("fircpp/test.cpp")
+	add_files("test/test.c")
+
+	add_deps("fir")
+target_end()
+
+target("fircpp-test")
+	set_kind("binary")
+
+	add_files("test/test.cpp")
 
 	add_deps("fircpp")
 target_end()

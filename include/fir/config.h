@@ -33,6 +33,7 @@ extern const char *FR_FUNC_ARG_NAMES[FR_FUNC_MAX_ARGS];
 /* convenience macros */
 #define FR_FUNC_TYPE_ARRAY(...) ((frIRType *[FR_FUNC_MAX_ARGS]){__VA_ARGS__})
 #define FR_FUNC_ARG_ARRAY(...) ((frIRValue *[FR_FUNC_MAX_ARGS]){__VA_ARGS__})
+#define FR_ZERO(p) memset(p, 0, sizeof *p)
 
 FR_HEADER_END
 

@@ -15,10 +15,12 @@ typedef struct frIR {
   size_t temp_index;
 
   frInsertPoint insert_point;
+  frArena strings_arena;
 } frIR;
 
 frIR frIR_new(void);
 void frIR_free(frIR *ir);
+char *frIR_strdup(frIR *ir, const char *s);
 
 void frIR_print(frIR *ir, FILE *fd);
 void frIR_temp(frIR *ir, char s[FR_IDENT_SIZE]);

@@ -1,11 +1,14 @@
 #include "fir/ir.h"
+#include "fir/arena.h"
 #include "fir/ir_inst.h"
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 
 frIR frIR_new(void) {
-  frIR ir = {0};
+  frIR ir;
+  FR_ZERO(&ir);
+  ir.strings_arena = frArena_new(0x100);
 
   return ir;
 }
@@ -18,6 +21,15 @@ void frIR_free(frIR *ir) {
     free(func);
     func = next;
   }
+
+  frArena_free(&ir->strings_arena);
+}
+
+char *frIR_strdup(frIR *ir, const char *s) {
+  size_t len = strlen(s) + 1;
+  char *news = frArena_alloc(&ir->strings_arena, len);
+  memcpy(news, s, len);
+  return news;
 }
 
 void frIR_print(frIR *ir, FILE *fd) {
@@ -54,7 +66,7 @@ frIRFunc *frIR_func(frIR *ir, frIRType *type, const char *name,
   ir->temp_index = 0;
 
   frIRFunc *func = malloc(sizeof *func);
-  *func = (frIRFunc){.name = name,
+  *func = (frIRFunc){.name = frIR_strdup(ir, name),
                      .type = type,
                      .block = malloc(sizeof(frIRBlock)),
                      .next = ir->func};
@@ -75,7 +87,7 @@ frIRFunc *frIR_extfunc(frIR *ir, frIRType *type, const char *name,
   ir->temp_index = 0;
 
   frIRFunc *func = malloc(sizeof *func);
-  *func = (frIRFunc){.name = name,
+  *func = (frIRFunc){.name = frIR_strdup(ir, name),
                      .type = type,
                      .block = NULL,
                      .next = ir->func,
@@ -144,10 +156,7 @@ void frIR_set_insert_func(frIR *ir, frIRFunc *func) {
 
 frIRValue frIR_arg(frIR *ir, size_t index) {
   frIRFunc *func = ir->func;
-  if (index >= FR_FUNC_MAX_ARGS) {
-    return (frIRValue){.name = "_error_arg_exceeds_max_values",
-                       .type = &frIRType_u0};
-  }
+  assert(index < FR_FUNC_MAX_ARGS);
 
   return (frIRValue){.name = FR_FUNC_ARG_NAMES[index],
                      .type = func->args[index]};
@@ -207,7 +216,9 @@ frIRValue frIR_constfloat(frIR *ir, frIRType *type, double number) {
 
 frIRValue frIR_conststr(frIR *ir, const char *s) {
   frIRInst *inst = malloc(sizeof *inst);
-  *inst = (frIRInst){.type = FR_CONST_STR, .v.const_str.str = s, .next = NULL};
+  *inst = (frIRInst){.type = FR_CONST_STR,
+                     .v.const_str.str = frIR_strdup(ir, s),
+                     .next = NULL};
   frIR_temp(ir, inst->v.const_str.name);
   frIR_insert(ir, inst);
   return (frIRValue){.name = inst->v.const_str.name, .type = &frIRType_str};
