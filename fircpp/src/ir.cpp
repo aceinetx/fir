@@ -3,12 +3,11 @@
 
 fir::IR::IR() : ir(frIR_new()) {}
 
-fir::IR::IR(IR &&other) {
-  ir = other.ir;
+fir::IR::IR(IR &&other) noexcept : ir(other.ir) {
   std::memset(&other.ir, 0, sizeof other.ir);
 }
 
-fir::IR &fir::IR::operator=(IR &&other) {
+fir::IR &fir::IR::operator=(IR &&other) noexcept {
   if (this != &other) {
     ir = other.ir;
     std::memset(&other.ir, 0, sizeof other.ir);
@@ -17,3 +16,5 @@ fir::IR &fir::IR::operator=(IR &&other) {
 }
 
 fir::IR::~IR() { frIR_free(&ir); }
+
+void fir::IR::print(FILE *out) { frIR_print(&ir, out); }

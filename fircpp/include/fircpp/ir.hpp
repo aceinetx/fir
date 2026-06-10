@@ -7,9 +7,11 @@ public:
   IR();
   IR(const IR &) = delete;
   IR &operator=(IR &) = delete;
-  IR(IR &&);
-  IR &operator=(IR &&);
+  IR(IR &&) noexcept;
+  IR &operator=(IR &&) noexcept;
   ~IR();
+
+  void print(FILE *out);
 
 private:
   frIR ir;
